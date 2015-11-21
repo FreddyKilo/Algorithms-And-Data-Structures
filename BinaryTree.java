@@ -65,24 +65,23 @@ public class BinaryTree {
 			if(isRightChild(z, z.parent)) z.parent.right = z.right;
 			else z.parent.left = z.right;
 		} else { // x has 2 children
-			// TODO: WIP
-			Node zCopy = new Node(z);
 			Node y = getSuccessor(z);
-			if(isRightChild(y, z)){
-				y.left = z.left;
-				y.parent = z.parent;
-				z = y;
-			} else {
-				
+			if(z != root){ // update z.parent.child
+				if(isLeftChild(z)) z.parent.left = y;
+				else z.parent.right = y;
 			}
+			y.left = z.left;
+			z.left.parent = y;
+			if(!isRightChild(y, z)){
+				y.parent.left = y.right;
+				y.right.parent = y.parent;
+				y.right = z.right;
+				z.right.parent = y;
+			}
+			y.parent = z.parent;
+			if(root == z) root = y;
+			z = null;
 		}
-	}
-	
-	private void transplant(Node z, Node y){
-		if(z.parent == null) this.root = y;
-		else if(isLeftChild(z)) z.parent.left = y;
-		else z.parent.right = y;
-		if(y != null) y.parent = z.parent;
 	}
 	
 	public Node find(int key){
@@ -118,7 +117,7 @@ public class BinaryTree {
 	}
 	
 	private boolean isLeftChild(Node x){
-		return x.value == x.parent.left.value;
+		return x == x.parent.left;
 	}
 	
 	private boolean isRightChild(Node child, Node parent){
