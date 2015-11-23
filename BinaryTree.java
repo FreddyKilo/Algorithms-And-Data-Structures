@@ -1,10 +1,12 @@
 package com.freddykilo.AlgorithmsAndDataStructures;
 
+
 public class BinaryTree {
 	
 	public Node root = null;
 	public Node min = null;
 	public Node max = null;
+	public int[] intArray;
 	int size = 0;
 	
 	public class Node {
@@ -62,7 +64,7 @@ public class BinaryTree {
 			else z.parent.right = z.left;
 		} else if(z.right != null && z.left == null){ // x has only 1 child on the right
 			z.right.parent = z.parent;
-			if(isRightChild(z, z.parent)) z.parent.right = z.right;
+			if(!isLeftChild(z)) z.parent.right = z.right;
 			else z.parent.left = z.right;
 		} else { // x has 2 children
 			Node y = getSuccessor(z);
@@ -72,7 +74,7 @@ public class BinaryTree {
 			}
 			y.left = z.left;
 			z.left.parent = y;
-			if(!isRightChild(y, z)){
+			if(isLeftChild(y)){
 				y.parent.left = y.right;
 				y.right.parent = y.parent;
 				y.right = z.right;
@@ -82,6 +84,31 @@ public class BinaryTree {
 			if(root == z) root = y;
 			z = null;
 		}
+	}
+	
+	public void balance() {
+		intArray = new int[this.size];
+		treeToArray(root);
+		this.root = null;
+        addBackInto(0, intArray.length - 1);
+	}
+
+	public void treeToArray(Node x) {
+	    if(x != null) {
+	    	treeToArray(x.right);
+	    	size--;
+	    	intArray[size] = x.value;
+	    	treeToArray(x.left);
+	    }
+	}
+	
+	public void addBackInto(int lo, int hi) {
+		int midpoint =(lo + hi) / 2;
+		insert(intArray[midpoint]);
+	    if(lo != midpoint){
+	    	addBackInto(lo, midpoint);
+	    	addBackInto(midpoint+1, hi);
+	    }
 	}
 	
 	public Node find(int key){
@@ -118,10 +145,6 @@ public class BinaryTree {
 	
 	private boolean isLeftChild(Node x){
 		return x == x.parent.left;
-	}
-	
-	private boolean isRightChild(Node child, Node parent){
-		return child == parent.right;
 	}
 	
 	public void printInOrder(){
