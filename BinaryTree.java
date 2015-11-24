@@ -6,7 +6,6 @@ public class BinaryTree {
 	public Node root = null;
 	public Node min = null;
 	public Node max = null;
-	public int[] intArray;
 	int size = 0;
 	
 	public class Node {
@@ -17,13 +16,6 @@ public class BinaryTree {
 		
 		public Node(int value){
 			this.value = value;
-		}
-		
-		public Node(Node x){
-			this.value = x.value;
-			this.left = x.left;
-			this.right = x.right;
-			this.parent = x.parent;
 		}
 	}
 	
@@ -87,27 +79,29 @@ public class BinaryTree {
 	}
 	
 	public void balance() {
-		intArray = new int[this.size];
-		treeToArray(root);
+		int[] intArray = new int[this.size];
+		int arraySize = intArray.length;
+		treeToArray(root, intArray);
 		this.root = null;
-        addBackInto(0, intArray.length - 1);
+        addBackInto(0, arraySize - 1, intArray);
+        insert(intArray[arraySize - 1]);
 	}
 
-	public void treeToArray(Node x) {
+	private void treeToArray(Node x, int[] intArray) {
 	    if(x != null) {
-	    	treeToArray(x.right);
+	    	treeToArray(x.right, intArray);
 	    	size--;
 	    	intArray[size] = x.value;
-	    	treeToArray(x.left);
+	    	treeToArray(x.left, intArray);
 	    }
 	}
 	
-	public void addBackInto(int lo, int hi) {
-		int midpoint =(lo + hi) / 2;
-		insert(intArray[midpoint]);
-	    if(lo != midpoint){
-	    	addBackInto(lo, midpoint);
-	    	addBackInto(midpoint+1, hi);
+	private void addBackInto(int lo, int hi, int[] intArray) {
+		int midpoint = (lo + hi) / 2;
+	    if(lo < hi){
+	    	insert(intArray[midpoint]);
+	    	addBackInto(lo, midpoint, intArray);
+	    	addBackInto(midpoint+1, hi, intArray);
 	    }
 	}
 	
@@ -212,6 +206,5 @@ public class BinaryTree {
 		}
 		return x;
 	}
-	
 	
 }
