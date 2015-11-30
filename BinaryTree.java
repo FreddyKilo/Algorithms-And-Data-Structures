@@ -1,12 +1,12 @@
 package com.freddykilo.AlgorithmsAndDataStructures;
 
-
 public class BinaryTree {
 	
 	public Node root = null;
 	public Node min = null;
 	public Node max = null;
 	int size = 0;
+	int depth = 0;
 	
 	public class Node {
 		public int value;
@@ -26,12 +26,14 @@ public class BinaryTree {
 			root = node;
 			min = node;
 			max = node;
+			depth = 1;
 			return;
 		}
 		if(value < min.value) min = node;
 		else if(value > max.value) max = node;
 		Node cursor = root;
 		Node parent = null;
+		int depthCount = 1;
 		while(cursor != null){
 			parent = cursor;
 			if(node.value < cursor.value){
@@ -39,7 +41,9 @@ public class BinaryTree {
 			} else {
 				cursor = parent.right;
 			}
+			depthCount++;
 		}
+		if(depthCount > depth) depth = depthCount;
 		node.parent = parent;
 		if(node.value < parent.value) parent.left = node;
 		else parent.right = node;
@@ -83,8 +87,8 @@ public class BinaryTree {
 		int arraySize = intArray.length;
 		treeToArray(root, intArray);
 		this.root = null;
-        addBackInto(0, arraySize - 1, intArray);
-        insert(intArray[arraySize - 1]);
+		addBackInto(0, arraySize - 1, intArray);
+		insert(intArray[arraySize - 1]);
 	}
 
 	private void treeToArray(Node x, int[] intArray) {
