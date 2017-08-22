@@ -1,12 +1,12 @@
 package com.freddykilo.AlgorithmsAndDataStructures;
 
-
 public class BinaryTree {
 	
 	public Node root = null;
 	public Node min = null;
 	public Node max = null;
 	int size = 0;
+	int depth = 0;
 	
 	public class Node {
 		public int value;
@@ -26,12 +26,14 @@ public class BinaryTree {
 			root = node;
 			min = node;
 			max = node;
+			depth = 1;
 			return;
 		}
 		if(value < min.value) min = node;
 		else if(value > max.value) max = node;
 		Node cursor = root;
 		Node parent = null;
+		int depthCount = 1;
 		while(cursor != null){
 			parent = cursor;
 			if(node.value < cursor.value){
@@ -39,7 +41,9 @@ public class BinaryTree {
 			} else {
 				cursor = parent.right;
 			}
+			depthCount++;
 		}
+		if(depthCount > depth) depth = depthCount;
 		node.parent = parent;
 		if(node.value < parent.value) parent.left = node;
 		else parent.right = node;
@@ -80,13 +84,14 @@ public class BinaryTree {
 	
 	public void balance() {
 		int[] intArray = new int[this.size];
-		treeToArray(root, intArray);
 		int arraySize = intArray.length;
+		treeToArray(root, intArray);
 		this.root = null;
-        insertMidElement(0, arraySize - 1, intArray);
+		addBackInto(0, arraySize - 1, intArray);
+		insert(intArray[arraySize - 1]);
 	}
 
-	public void treeToArray(Node x, int[] intArray) {
+	private void treeToArray(Node x, int[] intArray) {
 	    if(x != null) {
 	    	treeToArray(x.right, intArray);
 	    	size--;
@@ -95,12 +100,12 @@ public class BinaryTree {
 	    }
 	}
 	
-	public void insertMidElement(int lo, int hi, int[] intArray) {
-		int midpoint =(lo + hi) / 2;
-		insert(intArray[midpoint]);
-	    if(lo != midpoint){
-	    	insertMidElement(lo, midpoint, intArray);
-	    	insertMidElement(midpoint+1, hi, intArray);
+	private void addBackInto(int lo, int hi, int[] intArray) {
+		int midpoint = (lo + hi) / 2;
+	    if(lo < hi){
+	    	insert(intArray[midpoint]);
+	    	addBackInto(lo, midpoint, intArray);
+	    	addBackInto(midpoint+1, hi, intArray);
 	    }
 	}
 	
@@ -205,5 +210,4 @@ public class BinaryTree {
 		}
 		return x;
 	}
-
 }
