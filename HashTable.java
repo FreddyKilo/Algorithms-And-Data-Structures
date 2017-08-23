@@ -1,5 +1,7 @@
 package com.freddykilo.AlgorithmsAndDataStructures;
 
+import com.freddykilo.hashFunction.Hasher;
+
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -8,7 +10,7 @@ class HashTable {
     private int populatedCount = 0;
     private int totalCount = 0;
     private int maxLinkCount = 0;
-    private static final int TABLE_SIZE = 10_000_000;
+    private static final int TABLE_SIZE = 1_000_000;
 
     public static void main(String[] args) {
         HashTable hashTable = new HashTable(TABLE_SIZE);
@@ -55,7 +57,7 @@ class HashTable {
     }
 
     private int hash(String key) {
-        return Math.abs(key.hashCode()) % TABLE_SIZE;
+        return Hasher.getHash(key) % TABLE_SIZE;
     }
 
     /**
